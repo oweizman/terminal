@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>JSON-RPC Demo for JQuery Terminal Emulator</title>
+    <title>Or's Terminal Emulator Game</title>
     <meta name="author" content="Jakub Jankiewicz - jcubic&#64;onet.pl"/>
     <meta name="Description" content="Demonstration for JQuery Terminal Emulator using call automaticly JSON-RPC service (in php) with authentication."/>
     <link rel="sitemap" type="application/xml" title="Sitemap" href=""/>
@@ -10,32 +10,56 @@
     <script src="../js/jquery-1.7.1.min.js"></script>
     <script src="../js/jquery.mousewheel-min.js"></script>
     <script src="../js/jquery.terminal-min.js"></script>
+    <script type="text/javascript" src="../js/test.js"></script>
     <link href="../css/jquery.terminal.css" rel="stylesheet"/>
   </head>
 <body>
-<div>
+
 <script>
+
+// global variables
+var plus = 0;
+
+function part1(command,term) {
+    if (command == 'help') {
+        term.echo('if you type ping it will display pong\n' +
+                  'available commands are: help, ping, rawr, exit');
+    } else if (command == 'ping') {
+        term.echo('pong');
+    } else if (command == 'rawr') {
+        term.echo('Dinos go ' + command);
+    } else if (command == 'plus') {
+        var val = eval(1+1);
+        term.echo(val);
+    } else if (command == '++') {
+        plus++;
+        term.echo(plus);
+    } else if (command == 'go') {
+        test();
+    } else if (command == 'exit') {
+        p1--;
+    } else {
+        term.echo('unknown command ' + command);
+    }
+}
+
 jQuery(document).ready(function($) {
     var id = 1;
-    $('body').terminal(function(command, term) {
+    var p1 = 0;
+    $('div').terminal(function(command, term) {
         if (command == 'help') {
             term.echo("available commands are test");
         } else if (command == 'test'){
+            if (p1 == 0){
+                term.echo('part 1');
+                p1++;
+            }
             term.push(function(command, term) {
-                if (command == 'help') {
-                    term.echo('if you type ping it will display pong\n' +
-                              'available commands are: help, ping, rawr, exit');
-                } else if (command == 'ping') {
-                    term.echo('pong');
-                } else if (command == 'rawr') {
-                    term.echo('Dinos go ' + command);
-                } else {
-                    term.echo('unknown command ' + command);
-                }
+                part1(command,term);
             }, {
                 prompt: 'test> ',
                 name: 'test'});
-        
+            
         } else {
             term.echo("unknow command " + command);
         }
@@ -49,8 +73,10 @@ jQuery(document).ready(function($) {
 });
 
 </script>
+<h1>Terminal</h1>
+<div id="terminal">
 </div>
-<div>
-<h1>TEST</h1>
-</div>
+<span>
+right
+</span>
 </body>

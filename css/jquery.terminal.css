@@ -18,6 +18,8 @@
     padding: 10px;
     position: relative;
     overflow: hidden;
+    width: 50%;
+    height: 200px;
 }
 .cmd {
     padding: 0;
