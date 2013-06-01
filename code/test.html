@@ -15,10 +15,53 @@
   </head>
 <body>
 
+
+    <h1>Terminal</h1>
+    <div id="screen">
+    </div>
+    <div id="text" style="margin-left: 55%;">
+        right
+    </div>
+    <div id="main_img" style="margin-left: 55%;" >
+        <img id="img" src="http://placehold.it/110x110" style="width: 100px;">
+    </div>
+</body>
+
+
 <script>
 
 // global variables
 var plus = 0;
+var name = '';
+var p1 = 0;
+
+
+function changeImage(a) {
+        document.getElementById("img").src=a;
+        document.getElementById("img").style.width=50;
+    }
+
+function change_text(input){
+    if (input == null) {
+        $('#text').text('Processing..');
+    } else {
+        $('#text').text(input);
+    }
+}
+
+function makeName(command, term) {
+    if (command == 'yes'){
+        changeImage('../images/im1.jpg');
+        change_text(name);
+        //alert(name);
+    } else if (command == 'no') {
+        term.echo('retype then');
+    } else {
+        name = command;
+        term.echo(name + ' Do you want this name?' +
+                  'yes?no?');
+    }
+}
 
 function part1(command,term) {
     if (command == 'help') {
@@ -38,6 +81,14 @@ function part1(command,term) {
         test();
     } else if (command == 'exit') {
         p1--;
+    } else if (command == 'name') {
+        term.echo('Writing name');
+        term.push(function(command, term) {
+                makeName(command, term);
+            }, {
+                prompt: 'name> ',
+                name: 'name'});
+        
     } else {
         term.echo('unknown command ' + command);
     }
@@ -45,8 +96,15 @@ function part1(command,term) {
 
 jQuery(document).ready(function($) {
     var id = 1;
-    var p1 = 0;
-    $('div').terminal(function(command, term) {
+    $('#screen').terminal(function(command, term) {
+        try {
+            var result = window.eval(command);
+            if (result !== undefined) {
+                term.echo(new String(result));
+            }
+        } catch(e) {
+            term.error(new String(e));
+        }
         if (command == 'help') {
             term.echo("available commands are test");
         } else if (command == 'test'){
@@ -73,10 +131,3 @@ jQuery(document).ready(function($) {
 });
 
 </script>
-<h1>Terminal</h1>
-<div id="terminal">
-</div>
-<span>
-right
-</span>
-</body>

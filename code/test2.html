@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="../css/index.css" rel="stylesheet"/>
+    <script src="../js/jquery-1.7.1.min.js"></script>
+    <script src="../js/jquery.mousewheel-min.js"></script>
+    <script src="../js/jquery.terminal-min.js"></script>
+    <script type="text/javascript" src="../js/test.js"></script>
+    <link href="../css/jquery.terminal.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <header id="demo"><h2>Demo</h2></header>
+        <p>This is simple demo using javascript interpreter. (If cursor is not blinking - click on terminal to activate it) You can type any javascript expression, there are two debug function dir (like in python).</p>
+        <p>You can use JQuery &lsquo;$&rsquo; function to manipulate the page. You also have access to this terminal in &lsquo;term&rsquo; variable. Try &lsquo;dir(term)&rsquo; or &lsquo;term.signature()&rsquo;.</p>
+        <div id="term_demo"></div>
+        <script class="javascript">jQuery(function($, undefined) {
+    $('#term_demo').terminal(function(command, term) {
+        if (command !== '') {
+            try {
+                var result = window.eval(command);
+                if (result !== undefined) {
+                    term.echo(new String(result));
+                }
+            } catch(e) {
+                term.error(new String(e));
+            }
+        } else {
+           term.echo('');
+        }
+    }, {
+        greetings: 'Javascript Interpreter',
+        name: 'js_demo',
+        height: 200,
+        prompt: 'js> '});
+});</script>
+    
+    <div id="text">
+        Right
+    </div>
+    <div id="main_img" >
+        <img id="img" src="http://placehold.it/110x110" style="width: 100px;">
+    </div>
+    <div id="thumb_img">
+        <img src='http://placehold.it/120x60'  onclick='changeImage("http://placehold.it/120x60");'>
+        <img src='http://placehold.it/130x60'  onclick='changeImage("http://placehold.it/130x60");'>
+        <img src='../images/im1.jpg' style="width: 100px;" onClick='changeImage("../images/im1.jpg");'>
+        <img src='../images/im2.jpg' style="width: 100px;" onClick='changeImage("../images/im2.jpg");'>
+    </div>
+    
+    
+
+    
+    <!--<p>A script on this page starts this clock:</p>
+    <p id="demo2"></p>
+    <button onclick="myStopFunction()">Stop time</button>
+
+    <script>
+    var myVar=setInterval(function(){myTimer()},1000);
+    function myTimer() {
+        var d=new Date();
+        var t=d.toLocaleTimeString();
+        document.getElementById("demo2").innerHTML=t;
+    }
+    function myStopFunction() {
+        clearInterval(myVar);
+    }
+    </script>-->
+    
+    <div id="term_comment">
+    </div>
+    
+</body>
+
+
+<script>
+
+function changeImage(a) {
+        document.getElementById("img").src=a;
+        document.getElementById("img").style.width=50;
+    }
+
+function change_text(input){
+    if (input == null) {
+        $('#text').text('Processing..');
+    } else {
+        $('#text').text(input);
+    }
+}
+
+
+function dir(object) {
+    var result = '';
+    for (var property in object) {
+        if (object.hasOwnProperty(property)) { 
+            result += property + ', ';
+        }
+    }
+    return result;
+}
+
+function myfunc(command,term) {
+    if (command == 'help') {
+        term.echo('if you type ping it will display pong\n' +
+                  'available commands are: help, ping, rawr, exit');
+    } else if (command == 'ping') {
+        term.echo('pong');
+    } else if (command == 'rawr') {
+        term.echo('Dinos go ' + command);
+    } else if (command == 'plus') {
+        var val = eval(1+1);
+        term.echo(val);
+    } else if (command == '++') {
+        plus++;
+        term.echo(plus);
+    } else if (command == 'go') {
+        test();
+    } else if (command == 'exit') {
+        p1--;
+    } else if (command == 'name') {
+        term.echo('Writing name');
+        term.push(function(command, term) {
+                makeName(command, term);
+            }, {
+                prompt: 'name> ',
+                name: 'name'});
+        
+    } else {
+        term.echo('unknown command ' + command);
+    }
+}
+
+
+
+    
+jQuery(function($, undefined) {
+    $('.donate').mouseover(function() {
+        $(this).stop().animate({'margin-right': -30}, 300);
+    }).mouseout(function() {
+        $(this).stop().animate({'margin-right': -256});
+    });
+    // global to access from js terminal
+    term = $('#term_demo').terminal(function(command, term) {
+        if (command !== '') {
+            try {
+                var result = window.eval(command);
+                if (result !== undefined) {
+                    term.echo(new String(result));
+                }
+            } catch(e) {
+                term.error(new String(e));
+            }
+        } else {
+           term.echo('');
+        }
+    }, {
+        greetings: 'Javascript Interpreter',
+        name: 'js_demo',
+        height: 200,
+        prompt: 'js> '
+    });
+    
+    
+    
+    // ----------------------------------------------------------------
+    // COMMENTS
+    function now() {
+        var d = new Date();
+        return d.getDate() + '-' + (d.getMonth()+1) + '-' + d.getFullYear();
+    }
+    function add_comment(date, name, img, www, comment) {
+        name = name || 'Anonymous';
+        if (www && www.match(/http:\/\/.*\..*/)) {
+            name =  '<a href="' +www + '" target="blank">' + name + '</a>';
+        }
+        if (comment == '') {
+            comment = '&nbsp;';
+        }
+        comment = comment.replace(/\n/g, "<br/>");
+        $('#user_comments').append('<div class="comment"><img src="' + img +
+                                   '"/><ul><li>' + name + '</li><li>' + date +
+                                   '</li>' +'</ul><p>' +
+                                   comment + '</p></div>');
+        
+    }
+    var id = 1;
+    var process = 1;
+    var prompts = ['name: ', 'email: ', 'www: ', 'comment: '];
+    var comment = [];
+    var count = 1;
+    $('#term_comment').terminal(function(command, term) {
+        var idx = count++ % 4;
+        if (idx < 3) {
+            comment.push(command); //push the same function with diffrent prompt
+            term.push(arguments.callee, {prompt: prompts[idx]});
+        } else {
+            var comment_string = '';
+            term.echo("[[;#0a0;;]enter your comment and put single period '.' at the end.]");
+            comment.push(command);
+            term.push(function(command, term) {
+                if (command == '.') {
+                    comment.push($.trim(comment_string));
+                    count++;
+                    term.pop().pop().pop();
+                    term.pause();
+                $.jrpc("service.php", id++, 'add_comment', comment, 
+                       function(data) {
+                           term.resume().clear();
+                           if (data && data.result) {
+                               comment[1] = data.result;
+                               add_comment.apply(null, [now()].concat(comment));
+                               term.echo("Thanks you for your comment");
+                           } else if (data.error) {
+                               term.error("[RPC] " + data.error.message);
+                           } else {
+                               term.echo("Sorry but something wicked happen on the server");
+                           }
+                           
+                           comment = [];
+                       }, function(xhr, status, error) {
+                           term.resume();
+                           term.error('[AJAX] Response: ' + 
+                                      status + '\n' + 
+                                      xhr.responseText);
+                           comment = [];
+                       });
+                } else {
+                    term.set_prompt('...');
+                    comment_string += command + '\n';
+                }
+            }, {prompt: '...'}); // last interpreter
+        }
+    }, {greetings: false,
+        height: 100,
+        history: false,
+        prompt: prompts[0],
+        enabled: false});
+    // fetch comments
+    $('#user_comments').addClass('load');
+    
+    // ------------------------------------------------------------
+    $('pre.javascript').syntax('javascript');
+    
+    $('nav li a').click(function() {
+        var href = $(this).attr('href');
+        if (href[0] == '#') {
+            $('html,body').animate({
+                scrollTop: $(href).offset().top - 50
+            }, 500);
+        }
+    });
+    
+    $.jrpc("service.php", id++, 'get_comments', [], function(data) {
+        if (data.error) {
+            $('#user_comments').append('<p>Error Loading Comments: ' + 
+                                       data.error.message +
+                                       '</p>');
+        } else {
+            $.each(data.result, function(i, comment) {
+                add_comment.apply(null, comment);
+            });
+            $('#user_comments').removeClass('load');
+        }
+    }, function(xhr, status, error) {
+        $('#user_comments').removeClass('load').
+           append('<p>Error Loading Comments</p>');
+    });
+    
+    
+});
+    </script>
+  
